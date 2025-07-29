@@ -15,6 +15,14 @@ cd backend
 * uvicorn app.main:app --reload 
 
 ```
+## .env file
+```
+export OPENAI_API_KEY=
+export DATABASE_URL=
+export SECRET_KEY=
+export VLM_API_KEY=
+
+```
 
 ## 🖥 Running the Frontend (Next.js)
 ```
@@ -26,4 +34,47 @@ cd frontend
 2. Run dev server
 * npm run dev
 
+```
+
+## .env.local file
+```
+NEXT_PUBLIC_BASE_URL=http://localhost:8000
+
+```
+
+### Async Flow Description
+```
+[Login ✅]
+
+   ↓
+   
+[fetchChatHistory()] ───▶ Sidebar Recent Chats
+
+   ↓
+   
+[Upload Resume]
+
+   ↓
+
+[POST /resume/upload]
+
+   ↓
+
+[poll /resume/status/{id}] until "done"
+
+   ↓
+
+[User asks question]
+
+   ↓
+
+[POST /v1/chat/completions]
+
+   ↓
+
+[Append assistant reply]
+
+   ↓
+
+[Refresh history]
 ```
