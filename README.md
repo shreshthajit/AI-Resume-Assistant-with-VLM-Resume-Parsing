@@ -78,3 +78,20 @@ NEXT_PUBLIC_BASE_URL=http://localhost:8000
 
 [Refresh history]
 ```
+
+
+## To run with docker
+
+```
+1. docker-compose build
+2. docker-compose up
+
+in the database url we should replace "localhost" with "db"
+
+If face error like read-only file than type the following cmd:
+
+1. docker-compose down -v --remove-orphans
+2. wsl --shutdown
+3. docker-compose build -no-cache
+
+ ```
