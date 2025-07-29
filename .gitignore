@@ -1,0 +1,21 @@
+# ===== Python (FastAPI backend) =====
+__pycache__/
+*.py[cod]
+*.sqlite3
+*.env
+*.venv/
+env/
+venv/
+*.log
+.mypy_cache/
+.pytest_cache/
+db.sqlite3
+.env
+
+# ===== Node.js (Next.js frontend) =====
+node_modules/
+.next/
+out/
+.env.local
+npm-debug.log*
+
