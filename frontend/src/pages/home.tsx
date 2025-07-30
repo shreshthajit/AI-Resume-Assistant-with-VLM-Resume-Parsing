@@ -94,7 +94,7 @@ export default function ChatInterface() {
       if (res.ok) {
         const data = await res.json();
         setResumeId(resumeId);
-        setParsedResume(data.resume_name);
+        setParsedResume(data.parsed_data);
         setMessages(
           data.messages.map((m: any) => ({
             id: `${m.message_type}-${Date.now()}`,
@@ -181,7 +181,7 @@ export default function ChatInterface() {
           if (status.status === "done") {
             setParsedResume(status.parsed_data);
             setMessages((prev) => [
-              ...prev,
+              ...prev.filter((msg) => !msg.id.startsWith("upload-")), 
               {
                 id: `done-${Date.now()}`,
                 role: "assistant",
@@ -312,12 +312,12 @@ export default function ChatInterface() {
               <div key={msg.id} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"} mb-4`}>
                 <div
                   className={`px-4 py-2 rounded-lg shadow max-w-[80%] text-sm whitespace-pre-wrap ${msg.role === "user"
-                      ? "bg-blue-600 text-white"
-                      : msg.content.startsWith("❌")
-                        ? "bg-red-100 text-red-800"
-                        : msg.content.startsWith("⏳") || msg.content.startsWith("✅")
-                          ? "bg-yellow-100 text-yellow-800"
-                          : "bg-gray-200 text-gray-800"
+                    ? "bg-blue-600 text-white"
+                    : msg.content.startsWith("❌")
+                      ? "bg-red-100 text-red-800"
+                      : msg.content.startsWith("⏳") || msg.content.startsWith("✅")
+                        ? "bg-yellow-100 text-yellow-800"
+                        : "bg-gray-200 text-gray-800"
                     }`}
                 >
                   {msg.content}

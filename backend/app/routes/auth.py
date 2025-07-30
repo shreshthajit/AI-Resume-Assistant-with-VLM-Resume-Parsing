@@ -43,7 +43,6 @@ def login_for_access_token(
 
 @router.post("/register", response_model=User)
 def register(user_data: UserCreate, db: Session = Depends(get_db)):
-    # Check if user already exists
     existing_user = db.query(models.User).filter(models.User.email == user_data.email).first()
     if existing_user:
         raise HTTPException(status_code=400, detail="Email already registered")

@@ -22,7 +22,6 @@ async def upload_resume(
     file: UploadFile = File(...),
     db: Session = Depends(get_db)
 ):
-    # Check if user is authenticated
     if not hasattr(request.state, 'user_id'):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -118,11 +117,9 @@ async def stream_resume_status(
     db: Session = Depends(get_db)
 ):
     try:
-        # Verify token and get user_id
         payload = verify_token(token)
         user_id = UUID(payload["sub"])
         
-        # Validate resume ownership first before starting stream
         resume = db.query(models.Resume).filter(
             models.Resume.id == resume_id,
             models.Resume.user_id == user_id
@@ -138,10 +135,8 @@ async def stream_resume_status(
             last_status = None
             try:
                 while True:
-                    # Refresh the resume object periodically
                     db.refresh(resume)
                     
-                    # Only send update if status changed
                     if resume.status != last_status:
                         event_data = {
                             "status": resume.status,
@@ -160,10 +155,9 @@ async def stream_resume_status(
                         yield f"data: {json.dumps(event_data)}\n\n"
                         last_status = resume.status
                     
-                    await asyncio.sleep(1)  # More frequent checks
+                    await asyncio.sleep(1)
                     
             except GeneratorExit:
-                # Handle client disconnection
                 pass
             except Exception as e:
                 print(f"SSE generator error: {e}")
@@ -174,7 +168,7 @@ async def stream_resume_status(
             headers={
                 "Cache-Control": "no-cache",
                 "Connection": "keep-alive",
-                "X-Accel-Buffering": "no"  # Important for some proxies
+                "X-Accel-Buffering": "no" 
             }
         )
 

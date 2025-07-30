@@ -20,7 +20,6 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
 
-# Add this function to your auth.py
 def verify_token(token: str):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
@@ -30,9 +29,6 @@ def verify_token(token: str):
     except JWTError:
         return False
     return True
-
-
-
 
 
 def verify_password(plain_password: str, hashed_password: str):

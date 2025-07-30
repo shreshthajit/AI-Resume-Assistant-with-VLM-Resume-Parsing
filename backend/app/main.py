@@ -14,7 +14,6 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-# Configuration
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
 
@@ -33,7 +32,7 @@ origins = [
 
 class AuthMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
-        # Skip auth for OPTIONS requests
+       
         if request.method == "OPTIONS":
             return await call_next(request)
             
@@ -68,7 +67,6 @@ class AuthMiddleware(BaseHTTPMiddleware):
 
         return await call_next(request)
 
-# CORS middleware must come FIRST
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -78,10 +76,8 @@ app.add_middleware(
     expose_headers=["*"]
 )
 
-# Then add auth middleware
 app.add_middleware(AuthMiddleware)
 
-# Include routers
 app.include_router(auth.router, prefix="/auth", tags=["auth"])
 app.include_router(resume.router, prefix="/resume", tags=["resume"])
 app.include_router(chat.router, prefix="/v1/chat", tags=["chat"])

@@ -8,7 +8,7 @@ class ChatRequest(BaseModel):
     user_message: str
 
 class ChatMessage(BaseModel):
-    message_type: str  # user or assistant
+    message_type: str  
     content: str
 
 class ChatResponse(BaseModel):
@@ -25,4 +25,5 @@ class ResumeChatSummary(BaseModel):
 class ChatHistoryResponse(BaseModel):
     resume_id: UUID
     resume_name: str
+    parsed_data: dict
     messages: List[ChatMessage]

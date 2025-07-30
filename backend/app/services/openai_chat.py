@@ -2,7 +2,6 @@ import os
 from openai import OpenAI
 from dotenv import load_dotenv
 
-# Initialize the OpenAI client
 load_dotenv()
 
 openApiKey=os.getenv("OPENAI_API_KEY")
@@ -24,12 +23,10 @@ Skills: {[skill.get('name') for skill in parsed_resume.get('technical_skills', {
 
     messages = [{"role": "system", "content": system_prompt}]
     
-    # Add last 8 history messages
     for msg in history[-8:]:
         role = "user" if msg["message_type"] == "user" else "assistant"
         messages.append({"role": role, "content": msg["content"]})
 
-    # Add current user message
     messages.append({
         "role": "user",
         "content": f"{user_message}\n\nResume Summary:\n{summary}"

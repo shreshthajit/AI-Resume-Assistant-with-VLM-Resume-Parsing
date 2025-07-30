@@ -26,7 +26,6 @@ def chat_with_resume(
     if not resume or resume.status != "done":
         raise HTTPException(status_code=404, detail="Resume not ready or not found.")
 
-    # Save user message
     user_msg = models.ChatHistory(
         resume_id=data.resume_id,
         user_id=current_user.id,
@@ -37,7 +36,6 @@ def chat_with_resume(
     db.add(user_msg)
     db.commit()
 
-    # Get chat history for context
     history = (
         db.query(models.ChatHistory)
         .filter(
@@ -50,10 +48,8 @@ def chat_with_resume(
 
     history_list = [{"message_type": c.message_type, "content": c.content} for c in history]
 
-    # Generate AI response
     reply = generate_chat_response(resume.parsed_data, history_list, data.user_message)
 
-    # Save assistant reply
     assistant_msg = models.ChatHistory(
         resume_id=data.resume_id,
         user_id=current_user.id,
@@ -79,7 +75,6 @@ def get_user_resume_chats(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user)
 ):
-    # Get all resumes with their latest chat for the current user
     subquery = (
         db.query(
             models.ChatHistory.resume_id,
@@ -116,6 +111,7 @@ def get_user_resume_chats(
         for r in resume_chats
     ]
 
+
 @router.get("/history/{resume_id}", response_model=ChatHistoryResponse)
 def get_chat_history(
     resume_id: UUID,
@@ -143,6 +139,7 @@ def get_chat_history(
     return ChatHistoryResponse(
         resume_id=resume.id,
         resume_name=resume.filename,
+        parsed_data=resume.parsed_data,
         messages=[
             ChatMessage(
                 message_type=m.message_type,
